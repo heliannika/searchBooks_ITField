@@ -1,25 +1,44 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+import axios from 'axios';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+const App = () => {
+    const [query, setQuery] = useState('');
+    const [results, setResults] = useState([]);
+
+    const handleSearch = async () => {
+        try {
+            // Haku backendille
+            const response = await axios.get(`http://127.0.0.1:5000/api/search`, {
+                params: { query }
+            });
+            // Hakutulosten tallennus
+            setResults(response.data);
+        } catch (error) {
+            console.error("Error fetching data:", error);
+        }
+    };
+
+    return (
+        <div style={{ padding: '20px' }}>
+            <h1>Hae kirjaa</h1>
+            <input
+                type="text"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Hae kirjan mukaan..."
+            />
+            <button onClick={handleSearch}>Etsi</button>
+
+            <ul>
+                {/* Listaus hakutuloksista */}
+                {results.map((item) => (
+                    <li key={item.id}>
+                        <strong>{item.book}</strong>: {item.description} (kirjailija: {item.author}, alagenren ID: {item.subgenre_id})
+                    </li>
+                ))}
+            </ul>
+        </div>
+    );
+};
 
 export default App;
