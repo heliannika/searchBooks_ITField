@@ -25,7 +25,7 @@ const App = () => {
                 type="text"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                placeholder="Hae kirjan mukaan..."
+                placeholder="Hae kirjan/alagenren/kirjailijan mukaan..."
             />
             <button onClick={handleSearch}>Etsi</button>
 
@@ -33,7 +33,7 @@ const App = () => {
                 {/* Listaus hakutuloksista */}
                 {results.map((item) => (
                     <li key={item.id}>
-                        <strong>{item.book}</strong>: {item.description} (kirjailija: {item.author}, alagenren ID: {item.subgenre_id})
+                        <strong>{item.book}</strong>: {item.description} (kirjailija: {item.author})
                     </li>
                 ))}
             </ul>
