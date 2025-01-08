@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import './App.css';
 
 const App = () => {
     const [query, setQuery] = useState('');
@@ -18,22 +19,41 @@ const App = () => {
         }
     };
 
-    return (
-        <div style={{ padding: '20px' }}>
-            <h1>Hae kirjaa</h1>
-            <input
-                type="text"
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder="Hae kirjan/alagenren/kirjailijan mukaan..."
-            />
-            <button onClick={handleSearch}>Etsi</button>
+    // Onko kuvaus näkyvissä
+    const [visibleDescriptionId, setVisibleDescriptionId] = useState(null);
 
-            <ul>
+    // Togglataan tila näkyviin/näkymättömäksi
+    const toggleDescription = (id) => {
+      setVisibleDescriptionId(visibleDescriptionId === id ? null : id);
+    };
+  
+
+    return (
+        <div className="app-container">
+            <h1 className="heading">Hae kirjaa</h1>
+            <div className="search-bar">
+              <input
+                  type="text"
+                  className="search-input"
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  placeholder="Hae kirjan/alagenren/kirjailijan mukaan..."
+              />
+              <button className="search-button" onClick={handleSearch}>Etsi</button>
+            </div>
+
+            <ul className="results-list">
                 {/* Listaus hakutuloksista */}
                 {results.map((item) => (
-                    <li key={item.id}>
-                        <strong>{item.book}</strong>: {item.description} (kirjailija: {item.author})
+                    <li key={item.id} className="result-item">
+                      <div>
+                        <strong className="result-b" onClick={() => toggleDescription(item.id)}>{item.book}, author: {item.author}</strong>
+                      </div>
+                      {visibleDescriptionId === item.id && (
+                        <div>
+                          {item.description}
+                        </div>
+                      )}
                     </li>
                 ))}
             </ul>
